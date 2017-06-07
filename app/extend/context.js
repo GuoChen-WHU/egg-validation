@@ -12,17 +12,6 @@ module.exports = {
     for (const field in rules) {
       if (rules.hasOwnProperty(field)) {
         let rule = rules[field];
-
-        if (!data.hasOwnProperty(field)) {
-          errors.push({
-            code: 'missing_field',
-            field,
-            message: 'required',
-          });
-          continue;
-        }
-
-        const value = data[field];
         let pass = false;
 
         /**
@@ -35,6 +24,16 @@ module.exports = {
          * }
          */
         if (typeof rule === 'string') {
+          // field is required in abbreviated rule
+          if (!data.hasOwnProperty(field)) {
+            errors.push({
+              code: 'missing_field',
+              field,
+              message: 'required',
+            });
+            continue;
+          }
+          const value = data[field];
           rule = 'is' + rule.replace(/^\w/, s => s.toUpperCase());
           pass = this.app.validator[rule](value);
 
@@ -54,6 +53,7 @@ module.exports = {
          *   },
          *   time: {
          *     expect: 'isAfter',
+         *     required: false,
          *     args: [
          *       new Date(2017, 5, 5)
          *     ]
@@ -61,8 +61,23 @@ module.exports = {
          * }
          */
         } else if (typeof rule === 'object') {
+
+          // field is required by default
+          if (typeof rule.required === 'undefined') rule.required = true;
+
+          if (!data.hasOwnProperty(field)) {
+            if (rule.required) {
+              errors.push({
+                code: 'missing_field',
+                field,
+                message: 'required',
+              });
+            }
+            continue;
+          }
+
           const args = rule.args;
-          args.unshift(value);
+          args.unshift(data[field]);
           rule = rule.expect;
           pass = this.app.validator[rule].apply(null, args);
         }

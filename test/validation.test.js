@@ -21,6 +21,26 @@ describe('test/validation.test.js', () => {
       .expect(422);
   });
 
+  it('should return 422 when required field is missing', () => {
+    return request(app.callback())
+      .post('/')
+      .send({
+        page: '5',
+        id: '59340fd751d47615b8d2917a',
+      })
+      .expect(422);
+  });
+
+  it('should pass when not required field is missing', () => {
+    return request(app.callback())
+      .post('/')
+      .send({
+        email: 'foo@gmail.com',
+        id: '59340fd751d47615b8d2917a',
+      })
+      .expect(200);
+  });
+
   it('should return 422 when field not valid', () => {
     return request(app.callback())
       .post('/')

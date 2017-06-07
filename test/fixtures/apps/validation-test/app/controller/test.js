@@ -6,6 +6,7 @@ module.exports = app => {
     email: 'email',
     page: {
       expect: 'isInt',
+      required: false,
       args: [
         {
           min: 1,
