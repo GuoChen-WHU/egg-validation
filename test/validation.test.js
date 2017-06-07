@@ -27,6 +27,9 @@ describe('test/validation.test.js', () => {
       .send({
         page: '5',
         id: '59340fd751d47615b8d2917a',
+        tag: 'react',
+        password: 'pass123',
+        ['re-password']: 'pass123'
       })
       .expect(422);
   });
@@ -37,6 +40,8 @@ describe('test/validation.test.js', () => {
       .send({
         email: 'foo@gmail.com',
         id: '59340fd751d47615b8d2917a',
+        password: 'pass123',
+        ['re-password']: 'pass123'
       })
       .expect(200);
   });
@@ -48,6 +53,21 @@ describe('test/validation.test.js', () => {
         email: '123',
         page: '5',
         id: '59340fd751d47615b8d2917a',
+        password: 'pass123',
+        ['re-password']: 'pass123'
+      })
+      .expect(422);
+  });
+
+  it('should return 422 when not equals', () => {
+    return request(app.callback())
+      .post('/')
+      .send({
+        email: 'foo@gmail.com',
+        page: '5',
+        id: '59340fd751d47615b8d2917a',
+        password: 'pass123',
+        ['re-password']: 'pass1234'
       })
       .expect(422);
   });
@@ -59,11 +79,9 @@ describe('test/validation.test.js', () => {
         email: 'foo@gmail.com',
         page: '5',
         id: '59340fd751d47615b8d2917a',
-      })
-      .expect({
-        email: 'foo@gmail.com',
-        page: '5',
-        id: '59340fd751d47615b8d2917a',
+        tag: 'react',
+        password: 'pass123',
+        ['re-password']: 'pass123'
       })
       .expect(200);
   });

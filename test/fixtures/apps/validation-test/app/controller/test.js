@@ -5,22 +5,27 @@ module.exports = app => {
   const rules = {
     email: 'email',
     page: {
-      expect: 'isInt',
+      type: 'int',
       required: false,
-      args: [
-        {
-          min: 1,
-          max: 20,
-        },
-      ],
+      min: 1,
+      max: 20
     },
     id: 'mongoId',
+    tag: {
+      type: 'in',
+      required: false,
+      values: ['react', 'angular', 'vue']
+    },
+    password: 'alphanumeric',
+    ['re-password']: {
+      type: 'equals',
+      field: 'password'
+    }
   };
 
   class testController extends app.Controller {
     * index(ctx) {
       ctx.validate(rules);
-      ctx.body = ctx.request.body;
       ctx.status = 200;
     }
   }

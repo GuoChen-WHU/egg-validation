@@ -11,6 +11,7 @@
     "egg-plugin"
   ],
   "dependencies": {
+    "lodash.pick": "^4.4.0",
     "validator": "^7.0.0"
   },
   "devDependencies": {
