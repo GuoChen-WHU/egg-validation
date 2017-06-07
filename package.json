@@ -1,6 +1,6 @@
 {
   "name": "egg-validation",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "validate plugin for egg based on validator",
   "eggPlugin": {
     "name": "validation"
@@ -49,7 +49,7 @@
     "url": "git+https://github.com/guochen-whu/egg-validation.git"
   },
   "bugs": {
-    "url": "https://github.com/guochen-whu/egg/issues"
+    "url": "https://github.com/guochen-whu/egg-validation/issues"
   },
   "homepage": "https://github.com/guochen-whu/egg-validation#readme",
   "author": "Guo Chen",
