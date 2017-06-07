@@ -28,49 +28,35 @@ exports.validation = {
 
 ### Via object rule
 
-Currently, the plugin simply map the `expect` field to a validator function, and the `args` field is passed as arguments to that function.
-See [validator](https://github.com/chriso/validator.js) for all validators and how to define `args` properly.
-
-All fields is required by default, for field not requried, add `required: false` as in the `page` field.
-
 ```js
 // {app_root}/app/controller/post.js
 class postController extends app.Controller {
   *index(ctx) {
     ctx.validate({
       title: {
-        expect: 'isLength',
-        args: [
-          {
-            min: 10,
-            max: 50 
-          }
-        ]
+        type: 'length',
+        min: 10,
+        max: 50 
       },
       page: {
-        expect: 'isInt',
+        type: 'int',
         required: false,
-        args: [
-          {
-            min: 1,
-            max: 20
-          }
-        ]
+        gl: 0
       },
       tag: {
-        expect: 'isIn',
-        args: [
-          'react', 'vue', 'angular'
-        ]
+        type: 'in',
+        values: ['react', 'vue', 'angular']
       }
     });
   }
 }
 ```
 
+Fields are required by default, for field not requried, add `required: false`.
+
 ### Via abbreviated rule
 
-The plugin provide a more concise format for rules. This is recommended when there is no extra option, all [validators](https://github.com/chriso/validator.js) begins with `is` are supportted. 
+The plugin provide a more concise format for rules. This is recommended when there is no extra option. 
 
 ```js
 // {app_root}/app/controller/post.js
@@ -79,13 +65,87 @@ class postController extends app.Controller {
     ctx.validate({
       post_id: 'mongoId',
       page: 'int',
-      tag: 'alpha'
+      title: 'alphanumeric'
     });
   }
 }
 ```
 
-All fields are required in this format, for field not required, use object rule instead. e.g. `{ page: { expect: 'isInt', required: false } }`.
+Fields are required in this format, for field not required, use object rule instead.
+
+## Rules
+
+Here are some frequently used rules, see [validator](https://github.com/chriso/validator.js) for all rules supported.
+
+* contains: check if the field contains the seed.
+```
+{
+  type: 'contains',
+  seed: 'xxx'
+}
+```
+* equals
+```
+{
+  type: 'equals',
+  // check if equals to another field
+  field: 'password'
+  // or if equals to certain literal string
+  literal: 'pass123'
+}
+```
+* after: check if the field is a date that's after the specified date
+```
+{
+  type: 'after',
+  date: new Date(2017, 5, 7)
+}
+```
+* alpha: check if the field contains only letters (a-zA-Z).
+* alphanumeric: check if the field contains only letters and numbers.
+* boolean
+* decimal: check if the field represents a decimal number, such as 0.1, .3, 1.1, 1.00003, 4.0, etc.
+* email
+* empty: check if the field has a length of zero.
+* float
+```
+{
+  type: 'float',
+  min: 7.22,
+  max: 9.55,
+  // or
+  gl: 7.22, // greater than
+  lt: 9.55 // less than
+}
+```
+* in: check if the field is in a array of allowed values.
+```
+{
+  type: 'in',
+  values: ['react', 'vue', 'angular']
+}
+```
+* int: support min, max, gl, lt option as float, and allow_leading_zeroes option.
+* JSON: check if the field is valid JSON (note: uses JSON.parse).
+* length: check if the field's length falls in a range
+```
+{
+  type: length,
+  min: 5,
+  max: 50
+}
+```
+* mobilePhone
+* mongoId
+* numeric
+* url: check if the field is an URL. 
+* matches: check if field matches the pattern.
+```
+{
+  type: 'matches',
+  pattern: /foo/i
+}
+```
 
 ## License
 
