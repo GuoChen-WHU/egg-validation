@@ -73,6 +73,19 @@ class postController extends app.Controller {
 
 Fields are required in this format, for field not required, use object rule instead.
 
+The validate function accepts second argument: the data need to be validated, which defaults to ctx.request.body.
+
+```js
+ctx.validate({
+  post_id: 'mongoId',
+  page: 'int',
+  title: 'alphanumeric'
+}, {
+  ...ctx.request.body, 
+  ...ctx.params
+});
+``` 
+
 ## Rules
 
 Here are some frequently used rules, see [validator](https://github.com/chriso/validator.js) for all rules supported.
